@@ -31,6 +31,17 @@
             <a href="{{ route('memos.create') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-blue-50 text-blue-700 transition-colors">
                 <i data-lucide="plus-square" class="w-5 h-5"></i> Buat Memo Baru
             </a>
+            @if(auth()->check() && (auth()->user()->isSuperAdmin() || auth()->user()->isAdmin()))
+                <div class="pt-6 pb-2 px-3 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    Pengaturan Sistem
+                </div>
+                <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                    <i data-lucide="users" class="w-5 h-5"></i> Kelola Pengguna
+                </a>
+                <a href="{{ route('departments.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors">
+                    <i data-lucide="building-2" class="w-5 h-5"></i> Kelola Divisi
+                </a>
+            @endif
         </nav>
     </aside>
 
