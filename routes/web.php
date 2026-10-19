@@ -40,7 +40,10 @@ Route::middleware(['auth', 'role:super_admin,admin'])->group(function () {
     Route::put('/users/{user}', [App\Http\Controllers\UserController::class, 'update'])->name('users.update');
     Route::patch('/users/{user}/toggle-status', [App\Http\Controllers\UserController::class, 'toggleStatus'])->name('users.toggle-status');
 
-    Route::get('/departments', function () {
-        return "Halaman Manajemen Divisi (Segera Hadir)";
-    })->name('departments.index');
+    Route::get('/departments', [App\Http\Controllers\DepartmentController::class, 'index'])->name('departments.index');
+    Route::get('/departments/create', [App\Http\Controllers\DepartmentController::class, 'create'])->name('departments.create');
+    Route::post('/departments', [App\Http\Controllers\DepartmentController::class, 'store'])->name('departments.store');
+    Route::get('/departments/{department}/edit', [App\Http\Controllers\DepartmentController::class, 'edit'])->name('departments.edit');
+    Route::put('/departments/{department}', [App\Http\Controllers\DepartmentController::class, 'update'])->name('departments.update');
+    Route::patch('/departments/{department}/toggle-status', [App\Http\Controllers\DepartmentController::class, 'toggleStatus'])->name('departments.toggle-status');
 });
