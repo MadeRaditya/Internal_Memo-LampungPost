@@ -14,21 +14,32 @@ class DashboardController extends Controller
         $user = auth()->user();
         $deptId = $user->department_id;
 
-        $inboxCount = MemoRecipient::where('target_department_id', $deptId)->count();
+        $inboxCount = MemoRecipient::where('target_department_id', $deptId)
+            ->whereHas('memo', function ($query) {
+                $query->where('status', '!=', 'draft');
+            })
+            ->count();
+
         $unreadCount = MemoRecipient::where('target_department_id', $deptId)
             ->whereNull('read_at')
+            ->whereHas('memo', function ($query) {
+                $query->where('status', '!=', 'draft');
+            })
             ->count();
 
         $sentCount = Memo::where('sender_user_id', $user->id)
             ->where('status', '!=', 'draft')
             ->count();
-
+        
         $draftCount = Memo::where('sender_user_id', $user->id)
             ->where('status', 'draft')
             ->count();
 
         $recentInboxes = MemoRecipient::with(['memo.originDepartment'])
             ->where('target_department_id', $deptId)
+            ->whereHas('memo', function ($query) {
+                $query->where('status', '!=', 'draft');
+            })
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();

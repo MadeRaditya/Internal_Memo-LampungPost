@@ -23,6 +23,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/memos', [MemoController::class, 'index'])->name('memos.index');
     Route::get('/memos/create', [MemoController::class, 'create'])->name('memos.create');
     Route::post('/memos', [MemoController::class, 'store'])->name('memos.store');
+
+    Route::get('/memos/{memo}/edit', [MemoController::class, 'edit'])->name('memos.edit');
+    Route::put('/memos/{memo}', [MemoController::class, 'update'])->name('memos.update');
+    Route::delete('/memos/{memo}', [MemoController::class, 'destroy'])->name('memos.destroy');
+
     Route::get('/memos/{memo}', [MemoController::class, 'show'])->name('memos.show');
     Route::get('/memos/{memo}/print', [MemoController::class, 'print'])->name('memos.print');
     Route::get('/inbox', [InboxController::class, 'index'])->name('inbox.index');

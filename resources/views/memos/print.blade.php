@@ -111,7 +111,7 @@
                     <h3 class="text-center font-bold" style="margin-bottom: 20px;">LAMPIRAN {{ $index + 1 }}</h3>
                     <div class="attachment-container">
                         <img src="{{ asset('storage/' . $attachment->file_path) }}" class="attachment-img" alt="Lampiran {{ $index + 1 }}">
-                        <div class="attachment-caption">Gambar Lampiran: {{ $attachment->original_name }}</div>
+                        <div class="attachment-caption">Dokumen Lampiran {{ $index + 1 }}</div>
                     </div>
                 </div>
             @endif

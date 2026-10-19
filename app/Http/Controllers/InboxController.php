@@ -17,6 +17,9 @@ class InboxController extends Controller
 
         $inboxes = MemoRecipient::with(['memo.sender', 'memo.originDepartment'])
             ->where('target_department_id', $user->department_id)
+            ->whereHas('memo', function ($query) {
+                $query->where('status', '!=', 'draft');
+            })
             ->orderBy('created_at', 'desc')
             ->get();
 

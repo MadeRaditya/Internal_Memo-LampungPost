@@ -39,10 +39,23 @@
                             <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium uppercase">{{ $m->status }}</span>
                         @endif
                     </td>
-                    <td class="px-6 py-4 text-right">
-                        <a href="{{ route('memos.show', $m->id) }}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-xs font-medium">
-                            <i data-lucide="eye" class="w-3.5 h-3.5"></i> Lihat
+                    <td class="px-6 py-4 text-right flex items-center justify-end gap-2">
+                        <a href="{{ route('memos.show', $m->id) }}" class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
                         </a>
+
+                        @if($m->status === 'draft')
+                            <a href="{{ route('memos.edit', $m->id) }}" class="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors" title="Edit Draft">
+                                <i data-lucide="edit" class="w-4 h-4"></i>
+                            </a>
+                            
+                            <form action="{{ route('memos.destroy', $m->id) }}" method="POST" onsubmit="return confirm('Hapus draft ini?');">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus Draft">
+                                    <i data-lucide="trash" class="w-4 h-4"></i>
+                                </button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
                 @empty
