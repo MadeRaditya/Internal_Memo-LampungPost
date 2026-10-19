@@ -1,70 +1,129 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-6xl mx-auto">
-    <div class="mb-6 flex items-center justify-between">
+<div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- Header Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <h2 class="text-2xl font-bold text-gray-800">Daftar Memo Saya</h2>
-            <p class="text-gray-500 text-sm mt-1">Riwayat memo yang Anda buat dan kirim.</p>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                    Memo Keluar
+                </span>
+                <span class="text-xs text-slate-400">•</span>
+                <span class="text-xs text-slate-500">{{ $memos->count() }} Total Memo Dibuat</span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Daftar Memo Keluar</h1>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">Riwayat seluruh memo dinas yang Anda buat dan terbitkan ke divisi lain.</p>
         </div>
-        <a href="{{ route('memos.create') }}" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm">
-            <i data-lucide="plus" class="w-4 h-4"></i> Buat Memo
+
+        <a href="{{ route('memos.create') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white text-xs sm:text-sm font-semibold transition-all shadow-sm shadow-blue-500/20">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>Buat Memo Baru</span>
         </a>
     </div>
 
-    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <table class="w-full text-left text-sm text-gray-600">
-            <thead class="bg-gray-50 border-b border-gray-200 text-gray-700">
-                <tr>
-                    <th class="px-6 py-4 font-semibold">No. Memo / Tgl</th>
-                    <th class="px-6 py-4 font-semibold">Perihal</th>
-                    <th class="px-6 py-4 font-semibold">Tujuan</th>
-                    <th class="px-6 py-4 font-semibold">Status</th>
-                    <th class="px-6 py-4 font-semibold text-right">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-                @forelse($memos as $m)
-                <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="px-6 py-4">
-                        <div class="font-medium text-gray-900">{{ $m->memo_number ?? 'DRAFT' }}</div>
-                        <div class="text-xs text-gray-500">{{ $m->created_at->format('d M Y') }}</div>
-                    </td>
-                    <td class="px-6 py-4">{{ $m->subject }}</td>
-                    <td class="px-6 py-4">{{ $m->recipients->first()->targetDepartment->name ?? '-' }}</td>
-                    <td class="px-6 py-4">
-                        @if($m->status === 'draft')
-                            <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium uppercase">Draft</span>
-                        @else
-                            <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium uppercase">{{ $m->status }}</span>
-                        @endif
-                    </td>
-                    <td class="px-6 py-4 text-right flex items-center justify-end gap-2">
-                        <a href="{{ route('memos.show', $m->id) }}" class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
-                            <i data-lucide="eye" class="w-4 h-4"></i>
-                        </a>
+    <!-- Memos Table Card -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm text-slate-600">
+                <thead class="bg-slate-50/75 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    <tr>
+                        <th scope="col" class="px-6 py-4">No. Memo & Tanggal</th>
+                        <th scope="col" class="px-6 py-4">Perihal</th>
+                        <th scope="col" class="px-6 py-4">Divisi Tujuan</th>
+                        <th scope="col" class="px-6 py-4">Status</th>
+                        <th scope="col" class="px-6 py-4 text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @forelse($memos as $m)
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <!-- Memo Number & Date -->
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-slate-900 font-mono">{{ $m->memo_number ?? 'DRAFT' }}</div>
+                            <div class="text-xs text-slate-400 mt-0.5">{{ $m->created_at->translatedFormat('d M Y, H:i') }}</div>
+                        </td>
 
-                        @if($m->status === 'draft')
-                            <a href="{{ route('memos.edit', $m->id) }}" class="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors" title="Edit Draft">
-                                <i data-lucide="edit" class="w-4 h-4"></i>
-                            </a>
-                            
-                            <form action="{{ route('memos.destroy', $m->id) }}" method="POST" onsubmit="return confirm('Hapus draft ini?');">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus Draft">
-                                    <i data-lucide="trash" class="w-4 h-4"></i>
-                                </button>
-                            </form>
-                        @endif
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="5" class="px-6 py-8 text-center text-gray-500">Belum ada memo yang dibuat.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+                        <!-- Subject -->
+                        <td class="px-6 py-4">
+                            <div class="font-medium text-slate-900 line-clamp-1 max-w-sm">{{ $m->subject }}</div>
+                            <div class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">{{ Str::limit($m->content, 60) }}</div>
+                        </td>
+
+                        <!-- Target Department -->
+                        <td class="px-6 py-4">
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700">
+                                <i data-lucide="building" class="w-3.5 h-3.5 text-slate-400"></i>
+                                <span>{{ $m->recipients->first()->targetDepartment->name ?? '-' }}</span>
+                            </div>
+                        </td>
+
+                        <!-- Status Badge -->
+                        <td class="px-6 py-4">
+                            @if($m->status === 'draft')
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Draft
+                                </span>
+                            @elseif($m->status === 'in_progress')
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Diproses
+                                </span>
+                            @elseif($m->status === 'completed')
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Selesai
+                                </span>
+                            @else
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                    {{ strtoupper($m->status) }}
+                                </span>
+                            @endif
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end gap-1.5">
+                                <a href="{{ route('memos.show', $m->id) }}" class="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors" title="Lihat Pratinjau Memo" aria-label="Lihat Pratinjau">
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                </a>
+
+                                @if($m->status === 'draft')
+                                    <a href="{{ route('memos.edit', $m->id) }}" class="p-2 text-amber-600 hover:bg-amber-50 rounded-xl transition-colors" title="Ubah Draft Memo" aria-label="Edit Draft">
+                                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                    </a>
+
+                                    <form action="{{ route('memos.destroy', $m->id) }}" method="POST" onsubmit="return confirmDelete(event, this, 'Hapus konsep draft memo ini secara permanen?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="p-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-xl transition-colors" title="Hapus Draft Memo" aria-label="Hapus Draft">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="px-6 py-16 text-center">
+                            <div class="max-w-sm mx-auto flex flex-col items-center">
+                                <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mb-3">
+                                    <i data-lucide="send" class="w-7 h-7"></i>
+                                </div>
+                                <h3 class="text-base font-bold text-slate-800">Belum Ada Memo Terbit</h3>
+                                <p class="text-xs text-slate-400 mt-1 mb-4">Anda belum pernah membuat atau menerbitkan memo internal ke divisi lain.</p>
+                                <a href="{{ route('memos.create') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-xs">
+                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                    <span>Tulis Memo Pertama</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 @endsection

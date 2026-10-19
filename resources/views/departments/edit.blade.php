@@ -1,33 +1,78 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-xl mx-auto space-y-6">
+<div class="max-w-xl mx-auto space-y-6 pb-12">
+
+    <!-- Header & Navigation -->
     <div class="flex items-center justify-between">
-        <h2 class="text-2xl font-bold text-gray-800">Edit Divisi</h2>
-        <a href="{{ route('departments.index') }}" class="text-sm text-blue-600 hover:underline">Kembali</a>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('departments.index') }}" class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors" title="Kembali ke Daftar Divisi" aria-label="Kembali">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </a>
+            <div>
+                <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Edit Data Divisi</h1>
+                <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Perbarui singkatan kode atau nama lengkap departemen.</p>
+            </div>
+        </div>
     </div>
 
-    <form method="POST" action="{{ route('departments.update', $department->id) }}" class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-5">
+    <!-- Edit Form Card -->
+    <form id="departmentForm" method="POST" action="{{ route('departments.update', $department->id) }}" class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 sm:p-8 space-y-6">
         @csrf
         @method('PUT')
-        
-        <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Kode Divisi</label>
-            <input type="text" name="code" value="{{ old('code', $department->code) }}" required class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none uppercase">
-            @error('code') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+
+        <div class="space-y-4">
+            <div>
+                <label for="code" class="block text-xs font-bold text-slate-700 tracking-wide uppercase mb-1.5">
+                    Kode Singkatan Divisi <span class="text-rose-500" aria-hidden="true">*</span>
+                </label>
+                <input type="text" id="code" name="code" value="{{ old('code', $department->code) }}" required 
+                       oninput="this.value = this.value.toUpperCase()"
+                       class="w-full px-4 py-2.5 bg-slate-50 border @error('code') border-rose-300 ring-2 ring-rose-100 bg-rose-50/20 @else border-slate-300 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-100 @enderror rounded-xl text-sm font-mono font-bold text-slate-900 uppercase outline-none transition-all">
+                <p class="text-[11px] text-slate-400 mt-1">Perubahan kode akan mempengaruhi format penomoran untuk memo baru berikutnya.</p>
+                @error('code')
+                    <p class="text-xs text-rose-600 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="name" class="block text-xs font-bold text-slate-700 tracking-wide uppercase mb-1.5">
+                    Nama Lengkap Divisi <span class="text-rose-500" aria-hidden="true">*</span>
+                </label>
+                <input type="text" id="name" name="name" value="{{ old('name', $department->name) }}" required 
+                       class="w-full px-4 py-2.5 bg-slate-50 border @error('name') border-rose-300 ring-2 ring-rose-100 bg-rose-50/20 @else border-slate-300 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-100 @enderror rounded-xl text-sm text-slate-900 outline-none transition-all">
+                @error('name')
+                    <p class="text-xs text-rose-600 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
         </div>
 
-        <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nama Divisi Lengkap</label>
-            <input type="text" name="name" value="{{ old('name', $department->name) }}" required class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none">
-            @error('name') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
-        </div>
+        <!-- Form Actions -->
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+            <a href="{{ route('departments.index') }}" class="text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors">
+                Batal
+            </a>
 
-        <div class="pt-4 flex justify-end">
-            <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm flex items-center gap-2">
-                <i data-lucide="check-circle" class="w-4 h-4"></i> Perbarui Data
+            <button type="submit" id="btnSubmitDept" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 active:scale-[0.99] transition-all shadow-sm shadow-blue-500/20 cursor-pointer">
+                <i data-lucide="check" class="w-4 h-4"></i>
+                <span id="btnSubmitDeptText">Simpan Perubahan</span>
             </button>
         </div>
     </form>
 </div>
+
+<script>
+    let isDeptSubmitting = false;
+    document.getElementById('departmentForm').addEventListener('submit', function(e) {
+        if (isDeptSubmitting) {
+            e.preventDefault();
+            return false;
+        }
+        isDeptSubmitting = true;
+        const btn = document.getElementById('btnSubmitDept');
+        const text = document.getElementById('btnSubmitDeptText');
+        btn.classList.add('opacity-75', 'cursor-not-allowed');
+        text.textContent = 'Menyimpan...';
+    });
+</script>
 @endsection
