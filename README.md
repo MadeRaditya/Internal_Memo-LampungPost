@@ -42,8 +42,6 @@ Sistem informasi berbasis web untuk mendigitalisasi alur pembuatan, pengiriman, 
 
 ## Preview Aplikasi
 
-> **Catatan:** Simpan file tangkapan layar (*screenshot*) pada direktori `docs/screenshots/` sesuai nama file di bawah ini.
-
 ### 1. Halaman Login
 ![Halaman Login](docs/screenshots/01-login.png)
 
