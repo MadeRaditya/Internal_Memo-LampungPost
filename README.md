@@ -14,6 +14,7 @@ Sistem informasi berbasis web untuk mendigitalisasi alur pembuatan, pengiriman, 
 - [Akun Pengujian (Seeder)](#akun-pengujian-seeder)
 - [Struktur Direktori Penting](#struktur-direktori-penting)
 - [Aturan Bisnis & Penomoran](#aturan-bisnis--penomoran)
+- [Lisensi](#lisensi--kredit)
 
 ---
 
@@ -204,5 +205,12 @@ Setelah menjalankan `php artisan db:seed`, akun bawaan berikut dapat digunakan u
 * **Status Draft vs Resmi:** Memo berstatus `draft` tidak memiliki nomor surat, tidak tampil pada inbox maupun statistik divisi tujuan, serta masih dapat diubah atau dihapus oleh pembuatnya.
 * **Integritas Dokumen Resmi:** Memo yang sudah diterbitkan tidak dapat ditarik kembali atau dihapus untuk menjaga keutuhan arsip dan urutan penomoran.
 * **Penerusan (*Forwarding*):** Memo yang diteruskan ke divisi lain tetap mempertahankan nomor memo induk yang sama, namun mencatat alur penerima baru dan riwayat tindakan secara terpisah di audit trail.
+
+---
+## Lisensi & Kredit
+
+Dirancang dan dikembangkan oleh **[Made Raditya](https://github.com/MadeRaditya)** untuk **PT Masa Kini Mandiri / Lampung Post**.
+
+Hak Cipta &copy; 2026 PT Masa Kini Mandiri. Seluruh hak cipta dilindungi undang-undang. Kode sumber ini hanya ditujukan untuk operasional internal perusahaan dan tidak untuk didistribusikan ulang tanpa izin tertulis.
 
 ---
